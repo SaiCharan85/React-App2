@@ -1,0 +1,357 @@
+import React, { useState, useEffect } from 'react'
+import NewsElement from './NewsElement';
+import "bootstrap/dist/css/bootstrap.min.css";
+import SpinningLoader from './SpinningLoader';
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import PropTypes from 'prop-types';
+
+export default function News(props)
+{
+  
+ const capitalize1 = (string)=>{
+      return string.charAt(0).toUpperCase() + string.slice(1);
+ }
+  
+    const [articles, setArticles] = useState([
+      {
+        "source": {
+          "id": "reuters",
+          "name": "Reuters"
+          },
+          "author": null,
+          "title": "Binance, SEC agree to allow only US employees to access customer funds - Reuters",
+          "description": "Binance, Binance.US and the U.S. securities regulator entered into an agreement to ensure that only Binance.US employees could access customer funds in the short term, according to court documents.",
+          "url": "https://www.reuters.com/technology/urgent-binance-sec-strike-deal-move-all-us-customer-funds-wallet-keys-back-2023-06-17/",
+          "urlToImage": "https://www.reuters.com/resizer/3y7ZghMrSa8HbLanULGCw700zJo=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/OR5FF3F4P5JVRJ6BRO7CYSU7YM.jpg",
+          "publishedAt": "2023-06-17T08:55:00Z",
+          "content": "June 17 (Reuters) - Binance, Binance.US and the U.S. securities regulator entered into an agreement to ensure that only Binance.US employees could access customer funds in the short term, according t… [+1256 chars]"
+          },
+          {
+          "source": {
+          "id": "cbs-news",
+          "name": "CBS News"
+          },
+          "author": "Matthew Rodriguez",
+          "title": "Part of LAX Terminal 1 evacuated for suspicious package investigation - CBS Los Angeles",
+          "description": "After about two hours, a bomb squad cleared the item — an unattended bag — and allowed airport operations to resume just after 11 p.m.",
+          "url": "https://www.cbsnews.com/losangeles/news/part-of-lax-terminal-evacuated-for-suspicious-package-investigation/",
+          "urlToImage": "https://assets1.cbsnewsstatic.com/hub/i/r/2023/06/17/8ecd1c01-05b1-4011-9037-a131d898a697/thumbnail/1200x630/49401c85a27c59ff08ca5561defdcfbd/lax-closure.jpg?v=23da2bed74e9783333cf303fba619e89",
+          "publishedAt": "2023-06-17T04:58:00Z",
+          "content": "LAX has evacuated part of Terminal 1 as officers investigate a suspicious package. \r\nAuthorities first learned about the suspicious package at about 9:35 p.m. \r\nAirport police cleared out the area le… [+1066 chars]"
+          },
+          {
+          "source": {
+          "id": "cbs-news",
+          "name": "CBS News"
+          },
+          "author": "WBZ-News Staff",
+          "title": "Two planes make contact on ground at Logan Airport - CBS Boston",
+          "description": "Two planes made contact in an aircraft parking area at Logan Airport Friday night.",
+          "url": "https://www.cbsnews.com/boston/news/united-plane-clips-delta-logan-airport/",
+          "urlToImage": "https://assets2.cbsnewsstatic.com/hub/i/r/2023/06/17/d536e9b0-a570-4962-bb7e-391048344cd1/thumbnail/1200x630/16e4e9797258470bb44bef4bd64b584b/logan1.jpg?v=23da2bed74e9783333cf303fba619e89",
+          "publishedAt": "2023-06-17T03:07:00Z",
+          "content": "BOSTON - Two planes made contact in an aircraft parking area at Logan Airport Friday night. \r\nThe FAA says United Airlines Flight 369, a Boeing 737, was taxiing when its left wingtip clipped the tail… [+441 chars]"
+          },
+          {
+          "source": {
+          "id": "associated-press",
+          "name": "Associated Press"
+          },
+          "author": "BY WYATTE GRANTHAM-PHILIPS",
+          "title": "Despite widespread protest, Reddit CEO says company is 'not negotiating' on 3rd-party app charges - The Associated Press",
+          "description": "WASHINGTON (AP) — If you hopped on Reddit to scroll through your favorite forums this week, you may have encountered “private” or “restricted” messages. That’s because thousands of subreddits chose to go dark  in an ongoing protest over the company's plan to …",
+          "url": "https://apnews.com/article/reddit-blackout-steve-huffman-ceo-api-0a4f7b344ecfbf50c924b030c344c55e",
+          "urlToImage": "https://storage.googleapis.com/afs-prod/media/bae7b4471b134351acbde52ec9eb4c9d/2741.webp",
+          "publishedAt": "2023-06-17T02:00:24Z",
+          "content": "WASHINGTON (AP) If you hopped on Reddit to scroll through your favorite forums this week, you may have encountered private or restricted messages. Thats because thousands of subreddits chose to go da… [+6884 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "syracuse.com"
+          },
+          "author": "Scott Schild | sschild@syracuse.com",
+          "title": "FlynnStoned Cannabis Company rolls into Syracuse (photos) - syracuse.com",
+          "description": "FlynnStoned Cannabis Company holds a block party for its grand opening in Syracuse.",
+          "url": "https://www.syracuse.com/news/2023/06/flynnstoned-cannabis-company-rolls-into-syracuse-photos.html",
+          "urlToImage": "https://www.syracuse.com/resizer/QZIzW_xxZ4rhZZRz7wqnN_T51p0=/1280x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/HJM34H2NDNEPRHNRA3KVYHOUFI.JPG",
+          "publishedAt": "2023-06-17T00:38:00Z",
+          "content": "Syracuse, N.Y. Cannabis enthusiasts lined Walton St. despite the steady rain falling on Friday evening. \r\nThey were waiting to enter FlynnStoned Cannabis Company, a three level marijuana playground. … [+1032 chars]"
+          },
+          {
+          "source": {
+          "id": "the-washington-post",
+          "name": "The Washington Post"
+          },
+          "author": "Joseph Menn",
+          "title": "What to know about the MOVEit ransomware attack that hit U.S. agencies - The Washington Post",
+          "description": "U.S. officials are still assessing the impact of the attack.",
+          "url": "https://www.washingtonpost.com/technology/2023/06/16/moveit-ransomware-attack/",
+          "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/T7XC7Z76ROHL5EZTG2VW4ZC6HQ.JPG&w=1440",
+          "publishedAt": "2023-06-16T23:59:00Z",
+          "content": "U.S. officials announced earlier this week that a small number of federal agencies had been breached by a ransomware gang known as Cl0p and that they were working to assess the data stolen and mitiga… [+50 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "CNBC"
+          },
+          "author": "Julie Coleman",
+          "title": "Wait for a price break next week while the market's overbought, Jim Cramer says - CNBC",
+          "description": "CNBC's Jim Cramer gave his game plan for the week ahead, encouraging investors to hold off while the market is overbought.",
+          "url": "https://www.cnbc.com/2023/06/16/cramer-wait-for-a-price-break-next-week-while-the-markets-overbought.html",
+          "urlToImage": "https://image.cnbcfm.com/api/v1/image/107109968-NUP_198430_00193r.jpg?v=1686957838&w=1920&h=1080",
+          "publishedAt": "2023-06-16T23:23:58Z",
+          "content": "CNBC's Jim Cramer on Friday provided his game plan for the week ahead, encouraging investors to cool their heels while the market is so overbought.\r\n\"I think it's going to be worth your while to wait… [+2038 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "New York Post"
+          },
+          "author": "Reuters",
+          "title": "AT&T shutting flagship store in San Francisco, deepening city's pain - New York Post ",
+          "description": "Stores in San Francisco have been closing their doors as they try to cut down on real estate space in the face of declining customer visits, occupancy and sales.",
+          "url": "https://nypost.com/2023/06/16/att-to-shut-flagship-store-in-downtown-san-francisco/",
+          "urlToImage": "https://nypost.com/wp-content/uploads/sites/2/2023/06/att-san-francisco-closing.jpg?quality=75&strip=all&1686939775&w=1024",
+          "publishedAt": "2023-06-16T22:38:00Z",
+          "content": "Wireless carrier said Friday it would close its flagship store in downtown San Francisco, deepening the real estate pain in the once-booming tech hub that has been particularly hard hit by the pandem… [+1555 chars]"
+          },
+          {
+          "source": {
+          "id": "the-hill",
+          "name": "The Hill"
+          },
+          "author": "Nathaniel Weixel",
+          "title": "New COVID shots will target dominant version of XBB strain - The Hill",
+          "description": "The Food and Drug Administration (FDA) told vaccine manufacturers on Friday their fall COVID-19 update should target the XBB.1.5 strain of omicron. That variant is currently responsible for about 40 percent of all infections, according to the Centers for Dise…",
+          "url": "https://thehill.com/policy/healthcare/4054401-new-covid-shots-will-target-dominant-version-of-xbb-strain/",
+          "urlToImage": "https://thehill.com/wp-content/uploads/sites/2/2023/06/648ccae15ec788.85070350.jpeg?w=1280",
+          "publishedAt": "2023-06-16T21:56:00Z",
+          "content": "Skip to content\r\nThe Food and Drug Administration (FDA) told vaccine manufacturers on Friday their fall COVID-19 update should target the XBB.1.5 strain of omicron.\r\nThat variant is currently respons… [+2193 chars]"
+          },
+          {
+          "source": {
+          "id": "cnn",
+          "name": "CNN"
+          },
+          "author": "Clare Duffy",
+          "title": "Meta lowers the minimum age for its Quest headsets from 13 to 10 - CNN",
+          "description": "Facebook-parent Meta plans to lower the minimum age for its virtual reality headsets from 13 years old to 10 years old, despite pressure from lawmakers not to market its VR services to younger users.",
+          "url": "https://www.cnn.com/2023/06/16/tech/meta-quest-headsets-lowering-minimum-age/index.html",
+          "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230616163117-meta-quest-2-headset-minimum-age-stock-restricted.jpg?c=16x9&q=w_800,c_fill",
+          "publishedAt": "2023-06-16T21:38:00Z",
+          "content": "Facebook-parent Meta plans to lower the minimum age for its virtual reality headsets from 13 years old to 10 years old, despite pressure from lawmakers not to market its VR services to younger users.… [+3149 chars]"
+          },
+          {
+          "source": {
+          "id": "techcrunch",
+          "name": "TechCrunch"
+          },
+          "author": "Kirsten Korosec",
+          "title": "Electric truck maker Nikola to cut 23% of workforce - TechCrunch",
+          "description": "Nikola Motors is laying off 270 employees and restricting its electric truck efforts to North America as it seeks to preserve cash.",
+          "url": "https://techcrunch.com/2023/06/16/electric-truck-maker-nikola-to-cut-23-of-workforce/",
+          "urlToImage": "https://techcrunch.com/wp-content/uploads/2022/02/NIKOLA_TRE_BEV-5.jpg?resize=1200,675",
+          "publishedAt": "2023-06-16T21:34:01Z",
+          "content": "Nikola Corp. is laying off 270 employees, or about 23% of its workforce, and restricting its electric truck efforts to North America as it seeks to preserve cash.\r\nThe company said Friday it will lay… [+2371 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "Decrypt"
+          },
+          "author": "Sander Lutz",
+          "title": "Beeple Says It's Time to Delete Your JPEGs—Here's Why - Decrypt",
+          "description": "Was the $11 million Sotheby's auction on Thursday the \"final hurrah\" for NFTs? Leading artists and collectors in the space push back.",
+          "url": "https://decrypt.co/144980/beeple-says-time-delete-your-jpegs-heres-why",
+          "urlToImage": "https://cdn.decrypt.co/resize/1024/height/512/wp-content/uploads/2023/06/sothebys-art-auction-june23-gID_7.png",
+          "publishedAt": "2023-06-16T21:17:58Z",
+          "content": "For diehard crypto art enthusiasts, Thursday offered a glimmer of optimism reminiscent of the heyday of 2021s NFT frenzy. The Goose, the colloquial name for a piece of generative NFT artwork by Dmitr… [+3178 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "Fox Business"
+          },
+          "author": "Breck Dumas",
+          "title": "UAW president rallies members for potential strikes at Ford, GM and Stellantis - Fox Business",
+          "description": "The new president of the United Auto Workers came out swinging against Ford, General Motors and Stellantis on Friday, warning of possible strikes.",
+          "url": "https://www.foxbusiness.com/markets/uaw-president-rallies-members-potential-strikes-ford-gm-stellantis",
+          "urlToImage": "https://a57.foxnews.com/static.foxbusiness.com/foxbusiness.com/content/uploads/2023/06/0/0/ford-auto-worker.jpg?ve=1&tl=1",
+          "publishedAt": "2023-06-16T21:01:23Z",
+          "content": "New United Auto Workers President Shaw Fain appears ready to make good on his vow that the labor union will be more aggressive in its upcoming contract negotiations with Ford, General Motors and Stel… [+3036 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "CoinDesk"
+          },
+          "author": "Helene Braun",
+          "title": "BlackRock’s Spot Bitcoin ETF Not The Same As Grayscale’s Product, Experts Say - CoinDesk",
+          "description": "While both are technically trusts, there’s one key distinction which makes Blackrock’s proposed investment vehicle an exchange traded fund (ETF).",
+          "url": "https://www.coindesk.com/business/2023/06/16/blackrocks-spot-bitcoin-etf-not-the-same-as-grayscales-product-experts-say/",
+          "urlToImage": "https://www.coindesk.com/resizer/C8yqxagJEupXxE6r3FGYY8q6UrM=/1200x628/center/middle/cloudfront-us-east-1.images.arcpublishing.com/coindesk/BAS6BC7ICZEKNK6NMHVIHJEAFA.jpg",
+          "publishedAt": "2023-06-16T20:44:00Z",
+          "content": "Exchange Traded Fund (ETF) terminology can sometimes be tricky, and fund management giant BlackRocks application for a spot Bitcoin ETF has raised some questions.\r\nTo review, BlackRocks (BLK) iShares… [+1799 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "Investor's Business Daily"
+          },
+          "author": "Investor's Business Daily",
+          "title": "Dow Ends Lower As Richmond Fed Chief Warns Against This; Virgin Galactic Fades - Investor's Business Daily",
+          "description": null,
+          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-rises-virgin-galactic-fades-ev-rally-short-squeeze/",
+          "urlToImage": null,
+          "publishedAt": "2023-06-16T20:40:00Z",
+          "content": null
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "Investopedia"
+          },
+          "author": "Terry Lane",
+          "title": "Dow Jones Today: Index Drops as Market Rally Fizzles - Investopedia",
+          "description": "Investors couldn’t keep up the momentum from this week’s Fed rates news, but the Dow Jones Industrial Average still moved higher for the third-straight week",
+          "url": "https://www.investopedia.com/dow-jones-today-index-drops-as-rally-fizzles-7548277",
+          "urlToImage": "https://www.investopedia.com/thmb/pYeNUwX0BJeXfEna7Q7VeKstVFk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-463023679-71a3e970fa1e4e92853eb5315139b30d.jpg",
+          "publishedAt": "2023-06-16T20:37:42Z",
+          "content": "Investors werent able to keep up the excitement over Federal interest rates and more positive economic data today, but it wasn't enough to derail a positive week for the Dow Jones Industrial Average … [+2189 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "InsideEVs "
+          },
+          "author": "Christopher Smith",
+          "title": "DeSantis Blocks Direct-To-Consumer Car Sales For Most Brands, But Not Tesla [UPDATE] - InsideEVs ",
+          "description": "Florida has passed a law prohibiting most automakers from selling directly to consumers, but companies without prior dealership agreements are excluded.",
+          "url": "https://insideevs.com/news/672329/desantis-blocks-direct-consumer-car-sales-most-brands-not-tesla/",
+          "urlToImage": "https://cdn.motor1.com/images/mgl/wl4XRG/s1/desantis-and-tesla.jpg",
+          "publishedAt": "2023-06-16T20:33:00Z",
+          "content": "Update: Added responses from Ford, Stellantis, and information from the Alliance for Automotive Innovation at the end of this article.\r\nThe Florida Senate passed House Bill 637 and Governor Ron DeSan… [+3366 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "New York Post"
+          },
+          "author": "Fox Business",
+          "title": "Andy Puzder tells Anheuser-Busch CEO to choose: Be 'more definitive' or 'get rid of the brand' - New York Post ",
+          "description": "Brand tells customers ‘We hear you’ as Bud Light sales slump following Dylan Mulvaney partnership",
+          "url": "https://nypost.com/2023/06/16/andy-puzder-tells-anheuser-busch-ceo-to-choose-be-more-definitive-or-get-rid-of-the-brand/",
+          "urlToImage": "https://nypost.com/wp-content/uploads/sites/2/2023/06/bud-light-mulvaney-collage.jpg?quality=75&strip=all&1686932122&w=1024",
+          "publishedAt": "2023-06-16T20:30:00Z",
+          "content": "Brand tells customers ‘We hear you’ as Bud Light sales slump following Dylan Mulvaney partnership.\r\nOn “Varney &amp; Co.” Friday, former CKE Restaurants CEO Andy Puzder discussed Anheuser-Busch CEO B… [+2355 chars]"
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "wdwnt.com"
+          },
+          "author": "WDW News Today",
+          "title": "Andy Hopkins Becoming Interim Disney Parks CFO as Kevin Lansberry Takes Over for Christine McCarthy - WDW News Today",
+          "description": null,
+          "url": "https://wdwnt.com/2023/06/andy-hopkins-becoming-interim-disney-parks-cfo-as-kevin-lansberry-takes-over-mccarthys-position/",
+          "urlToImage": null,
+          "publishedAt": "2023-06-16T20:23:24Z",
+          "content": null
+          },
+          {
+          "source": {
+          "id": null,
+          "name": "Kitco NEWS"
+          },
+          "author": "http://www.facebook.com/kitconews",
+          "title": "Even the Fed can't hold gold down - Kitco NEWS",
+          "description": "",
+          "url": "https://www.kitco.com/news/2023-06-16/Even-the-Fed-can-t-hold-gold-down.html",
+          "urlToImage": "https://www.kitco.com/news/2023-06-16/images/Signup_T.gif",
+          "publishedAt": "2023-06-16T20:23:00Z",
+          "content": "(Kitco News) - I will be the first to admit that gold has been a frustrating asset to trade in the last two months as prices have dropped from their near-record highs above $2,080 an ounce to between… [+3451 chars]"
+          }
+    ]);
+    const [ loading, setLoading ] = useState(true);
+
+    const [ page, setPage ] = useState(1);
+    const [ total, setTotal] = useState(0);
+      
+        //document.title = `${capitalize1(props.category)} - News`;
+    
+
+       const update =  async () =>{
+          props.setProgress(10)
+          const url =`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=8f1fd1a9df514327a9f8d08c2f0653e0&page=${page}&pageSize=${props.pageSize}`;
+          
+          setLoading(loading=true);
+          let data = await fetch(url);
+          props.setProgress(30);
+          let parsedData = await data.json();
+          props.setProgress(70);
+          console.log(parsedData);
+          setArticles(articles = parsedData.articles)
+          setTotal(total = parsedData.total)
+          setLoading(loading=false)
+          props.setProgress(100)
+        }
+useEffect(()=> {
+          document.title = `${capitalize1(props.category)} - News`;
+
+         update();}, []
+         //eslint-disable-next-l
+)
+      
+      
+       const fetch1 = async () =>{
+          const url =`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=8f1fd1a9df514327a9f8d08c2f0653e0&page=${props.page}&pageSize=${props.pageSize}`;
+          setPage(page + 1);
+          setLoading({loading:true});
+          let data = await fetch(url);
+          let parsedData = await data.json();
+          console.log(parsedData);
+          setArticles(articles = articles.concat(parsedData.articles))
+          setTotal(total = parsedData.total)
+       }
+    return (
+      <>
+      <div className='container my-5'>
+        <h2 className='my-3 text-center'>Top  {capitalize1()} Headlines  </h2>
+        {loading && <SpinningLoader/>}
+        <InfiniteScroll
+          dataLength={articles.length}
+          next={fetch1}
+          hasMore={articles.length !== total}
+          loader={<SpinningLoader/>}
+        >
+          <div className='container'>
+        <div className='row'>
+            {articles.map((hrr)=>(
+              
+           <div className='col-md-4 my-3' key={hrr.url}>
+        <NewsElement title={hrr.title?hrr.title.slice(0,47):""} description={hrr.description?hrr.description.slice(0,111):""} iurl={hrr.urlToImage} nurl={hrr.url} author={hrr.author} date={hrr.publishedAt} source={hrr.source.name}/>
+        </div>
+  ))}
+</div>
+</div>
+</InfiniteScroll>
+      </div>
+      </>
+    )
+   }
+  
+   News.defaultProps ={
+  country : 'in',
+  pageSize: 8,
+  category: 'general'
+}
+News.props ={
+  country: PropTypes.string,
+  pageSize: PropTypes.number,
+  category: PropTypes.string
+}
+
+
